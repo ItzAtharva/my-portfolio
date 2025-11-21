@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Github, 
   Linkedin, 
@@ -13,11 +13,8 @@ import {
   Shield, 
   Menu, 
   X, 
-  ChevronRight,
   Download,
   Bot,
-  Sparkles,
-  Loader,
   ArrowUpRight,
   MapPin,
   Award,
@@ -37,22 +34,21 @@ import {
   GraduationCap
 } from 'lucide-react';
 
+// ⚠️ Make sure to place your image file in the same folder and name it correctly, 
+// or import it here if using a specific bundler like Create React App / Vite:
+// import profileImg from './shared image.jpg'; 
+
 const AestheticPortfolio = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
   const [scrolled, setScrolled] = useState(false);
 
-  // --- PITCH GENERATOR STATE ---
-  const [pitchCompany, setPitchCompany] = useState('');
-  const [pitchRole, setPitchRole] = useState('');
-  const [generatedPitch, setGeneratedPitch] = useState('');
-  const [isPitchLoading, setIsPitchLoading] = useState(false);
-  
   // Scroll handler
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 50);
-      const sections = ['home', 'about', 'experience', 'automations', 'skills', 'projects', 'education', 'contact'];
+      // Removed 'contact' from this list
+      const sections = ['home', 'about', 'experience', 'automations', 'skills', 'projects', 'education'];
       const scrollPosition = window.scrollY + 100;
       for (const section of sections) {
         const element = document.getElementById(section);
@@ -64,48 +60,6 @@ const AestheticPortfolio = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-
-  const resumeContext = `
-    Name: Atharva Jagtap
-    Role: DevOps & AI-Infrastructure Engineer
-    Current Company: Prorigo Software Pvt. Ltd. (Client: Epicor)
-    Experience: 2+ Years
-    - DevOps Engineer at Prorigo: Monitors CI/CD, automates workflows, OS patching, AWS CloudWatch alerting.
-    - Built automations for retrieving versioned files from S3 and sending alerts via SES/SNS.
-    - Implemented Cross-VPC backup & restore for RDS.
-    - Knowledge of AI/ML integration in Ops.
-  `;
-
-  const callGemini = async (prompt, systemInstruction) => {
-    const apiKey = ""; 
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
-    const payload = {
-      contents: [{ parts: [{ text: prompt }] }],
-      systemInstruction: { parts: [{ text: systemInstruction }] }
-    };
-    try {
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-      const data = await response.json();
-      if (data.error) throw new Error(data.error.message);
-      return data.candidates?.[0]?.content?.parts?.[0]?.text || "I couldn't generate a response at the moment.";
-    } catch (error) {
-      return "Connection issue. Please try again.";
-    }
-  };
-
-  const handleGeneratePitch = async () => {
-    if (!pitchCompany || !pitchRole) return;
-    setIsPitchLoading(true);
-    const prompt = `Generate a professional, persuasive elevator pitch (max 3 sentences) for Atharva applying to ${pitchCompany} as a ${pitchRole}. Highlight his specific automations (S3/SES), cloud skills, and AI awareness.`;
-    const systemPrompt = `You are Atharva. Write in first person. Professional tone. Context: ${resumeContext}`;
-    const result = await callGemini(prompt, systemPrompt);
-    setGeneratedPitch(result);
-    setIsPitchLoading(false);
-  };
 
   const handleNavClick = (sectionId) => {
     setIsMenuOpen(false);
@@ -180,7 +134,8 @@ const AestheticPortfolio = () => {
             </div>
             
             <div className="hidden md:flex space-x-8 font-inter text-sm font-medium text-gray-400">
-              {['Home', 'About', 'Experience', 'Automations', 'Skills', 'Projects', 'Education', 'Contact'].map((item) => (
+              {/* Removed 'Contact' from nav items */}
+              {['Home', 'About', 'Experience', 'Automations', 'Skills', 'Projects', 'Education'].map((item) => (
                 <button
                   key={item}
                   onClick={() => handleNavClick(item.toLowerCase())}
@@ -201,7 +156,8 @@ const AestheticPortfolio = () => {
 
         {isMenuOpen && (
           <div className="md:hidden absolute top-full left-0 w-full bg-[#050505] border-b border-white/10 p-4 backdrop-blur-xl">
-            {['Home', 'About', 'Experience', 'Automations', 'Skills', 'Projects', 'Education', 'Contact'].map((item) => (
+            {/* Removed 'Contact' from mobile nav items */}
+            {['Home', 'About', 'Experience', 'Automations', 'Skills', 'Projects', 'Education'].map((item) => (
               <button
                 key={item}
                 onClick={() => handleNavClick(item.toLowerCase())}
@@ -307,18 +263,18 @@ const AestheticPortfolio = () => {
         {/* Tech Marquee */}
         <div className="max-w-7xl mx-auto mt-24 pt-8 border-t border-white/5 tech-marquee-container overflow-hidden">
            <div className="flex gap-16 whitespace-nowrap tech-marquee items-center">
-              {[
-                "Amazon Web Services", "Terraform", "AI Integration", "Docker", "Kubernetes", "Jenkins", 
-                "Azure DevOps", "Python", "LLM Ops", "PostgreSQL", "Ansible", "Linux Automation",
-                "Amazon Web Services", "Terraform", "AI Integration", "Docker"
-              ].map((tech, idx) => (
+             {[
+               "Amazon Web Services", "Terraform", "AI Integration", "Docker", "Kubernetes", "Jenkins", 
+               "Azure DevOps", "Python", "LLM Ops", "PostgreSQL", "Ansible", "Linux Automation",
+               "Amazon Web Services", "Terraform", "AI Integration", "Docker"
+             ].map((tech, idx) => (
                  <span key={idx} className="text-gray-500 font-grotesk font-medium text-lg opacity-40 hover:opacity-100 hover:text-emerald-400 transition-all cursor-default">{tech}</span>
-              ))}
+             ))}
            </div>
         </div>
       </section>
 
-      {/* 1. About Me Section (Moved Up & Detailed) */}
+      {/* 1. About Me Section */}
       <section id="about" className="py-24 bg-white/[0.01]">
         <div className="max-w-6xl mx-auto px-6">
           <div className="glass-card p-10 rounded-3xl">
@@ -339,34 +295,34 @@ const AestheticPortfolio = () => {
                     </p>
                   </div>
                   <div className="mt-8 flex flex-wrap gap-4">
-                     <div className="px-4 py-2 bg-white/5 rounded-lg border border-white/10 text-sm text-gray-400 flex items-center gap-2">
-                        <Globe size={16} /> Pune, India
-                     </div>
-                     <div className="px-4 py-2 bg-white/5 rounded-lg border border-white/10 text-sm text-gray-400 flex items-center gap-2">
-                        <Briefcase size={16} /> Open to Relocation
-                     </div>
+                      <div className="px-4 py-2 bg-white/5 rounded-lg border border-white/10 text-sm text-gray-400 flex items-center gap-2">
+                         <Globe size={16} /> Pune, India
+                      </div>
+                      <div className="px-4 py-2 bg-white/5 rounded-lg border border-white/10 text-sm text-gray-400 flex items-center gap-2">
+                         <Briefcase size={16} /> Open to Relocation
+                      </div>
                   </div>
                </div>
                
                {/* Side Stats in About */}
                <div className="lg:w-1/3 w-full">
                   <div className="p-6 rounded-2xl bg-black/20 border border-white/5 space-y-6">
-                     <div>
-                        <h4 className="text-white font-bold mb-2">Focus Areas</h4>
-                        <div className="flex flex-wrap gap-2">
-                           <span className="px-3 py-1 bg-emerald-500/10 text-emerald-400 text-xs rounded-full border border-emerald-500/20">Cloud Native</span>
-                           <span className="px-3 py-1 bg-blue-500/10 text-blue-400 text-xs rounded-full border border-blue-500/20">DevSecOps</span>
-                           <span className="px-3 py-1 bg-purple-500/10 text-purple-400 text-xs rounded-full border border-purple-500/20">AI Integration</span>
-                        </div>
-                     </div>
-                     <div className="pt-6 border-t border-white/10">
-                        <h4 className="text-white font-bold mb-2">Soft Skills</h4>
-                        <ul className="text-sm text-gray-400 space-y-2">
-                           <li>• Strategic Problem Solving</li>
-                           <li>• Cross-Functional Leadership</li>
-                           <li>• Process Optimization</li>
-                        </ul>
-                     </div>
+                      <div>
+                         <h4 className="text-white font-bold mb-2">Focus Areas</h4>
+                         <div className="flex flex-wrap gap-2">
+                            <span className="px-3 py-1 bg-emerald-500/10 text-emerald-400 text-xs rounded-full border border-emerald-500/20">Cloud Native</span>
+                            <span className="px-3 py-1 bg-blue-500/10 text-blue-400 text-xs rounded-full border border-blue-500/20">DevSecOps</span>
+                            <span className="px-3 py-1 bg-purple-500/10 text-purple-400 text-xs rounded-full border border-purple-500/20">AI Integration</span>
+                         </div>
+                      </div>
+                      <div className="pt-6 border-t border-white/10">
+                         <h4 className="text-white font-bold mb-2">Soft Skills</h4>
+                         <ul className="text-sm text-gray-400 space-y-2">
+                            <li>• Strategic Problem Solving</li>
+                            <li>• Cross-Functional Leadership</li>
+                            <li>• Process Optimization</li>
+                         </ul>
+                      </div>
                   </div>
                </div>
             </div>
@@ -374,7 +330,7 @@ const AestheticPortfolio = () => {
         </div>
       </section>
 
-      {/* 2. Work Experience Section (Detailed) */}
+      {/* 2. Work Experience Section */}
       <section id="experience" className="py-24">
         <div className="max-w-5xl mx-auto px-6">
           <div className="mb-16 flex items-end justify-between border-b border-white/10 pb-6">
@@ -393,69 +349,70 @@ const AestheticPortfolio = () => {
               <div className="hidden lg:block absolute left-[50%] top-0 bottom-0 w-px bg-white/10"></div>
               
               <div className="flex flex-col lg:flex-row items-start justify-between gap-8 lg:gap-16">
-                 
-                 {/* Date */}
-                 <div className="lg:w-[45%] lg:text-right lg:pr-8 lg:pt-2">
-                    <h3 className="text-2xl font-bold text-white font-grotesk">DevOps Engineer</h3>
-                    <p className="text-white/60 font-medium text-lg mb-1">Prorigo Software Pvt. Ltd.</p>
-                    <div className="inline-block px-3 py-1 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-sm font-medium">
-                      Mar 2024 - Present
-                    </div>
-                 </div>
+                  
+                  {/* Date */}
+                  <div className="lg:w-[45%] lg:text-right lg:pr-8 lg:pt-2">
+                     <h3 className="text-2xl font-bold text-white font-grotesk">DevOps Engineer</h3>
+                     <p className="text-white/60 font-medium text-lg mb-1">Prorigo Software Pvt. Ltd.</p>
+                     <div className="inline-block px-3 py-1 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-sm font-medium">
+                       Mar 2024 - Present
+                     </div>
+                  </div>
 
-                 {/* Dot */}
-                 <div className="absolute left-0 lg:left-[50%] lg:-ml-[9px] top-3 w-[18px] h-[18px] rounded-full bg-[#050505] border-4 border-emerald-500 z-10"></div>
+                  {/* Dot */}
+                  <div className="absolute left-0 lg:left-[50%] lg:-ml-[9px] top-3 w-[18px] h-[18px] rounded-full bg-[#050505] border-4 border-emerald-500 z-10"></div>
 
-                 {/* Content */}
-                 <div className="lg:w-[45%] lg:pl-8">
-                    <div className="glass-card p-8 rounded-2xl relative">
-                       <div className="space-y-6">
-                          <div>
-                             <h4 className="text-white font-bold mb-2 flex items-center gap-2"><Server size={16} className="text-blue-400"/> Operational Excellence</h4>
-                             <p className="text-sm text-gray-400 leading-relaxed">
-                               Managing daily operational workflows for client <strong>Epicor</strong>. Took ownership of system stability, reducing manual intervention by ~40% through strategic automation of repetitive tasks.
-                             </p>
-                          </div>
-                          <div>
-                             <h4 className="text-white font-bold mb-2 flex items-center gap-2"><Workflow size={16} className="text-purple-400"/> CI/CD & Pipelines</h4>
-                             <p className="text-sm text-gray-400 leading-relaxed">
-                               Deploying web, batch, API, and scheduler apps to testing environments via <strong>Azure DevOps</strong>. monitoring ETL pipelines and data loads to ensure data integrity and timely processing.
-                             </p>
-                          </div>
-                          <div>
-                             <h4 className="text-white font-bold mb-2 flex items-center gap-2"><Shield size={16} className="text-emerald-400"/> Governance & Recovery</h4>
-                             <p className="text-sm text-gray-400 leading-relaxed">
-                               Configuring integrations and middleware for seamless handoffs. Logging daily issues and tracking fixes. Implemented Cross-VPC backup & restore for RDS PostgreSQL to guarantee disaster recovery compliance.
-                             </p>
-                          </div>
-                       </div>
-                    </div>
-                 </div>
+                  {/* Content */}
+                  <div className="lg:w-[45%] lg:pl-8">
+                     <div className="glass-card p-8 rounded-2xl relative">
+                     
+                        <div className="space-y-6">
+                           <div>
+                              <h4 className="text-white font-bold mb-2 flex items-center gap-2"><Server size={16} className="text-blue-400"/> Operational Excellence</h4>
+                              <p className="text-sm text-gray-400 leading-relaxed">
+                                Managing daily operational workflows for client <strong>Epicor</strong>. Took ownership of system stability, reducing manual intervention by ~40% through strategic automation of repetitive tasks.
+                              </p>
+                           </div>
+                           <div>
+                              <h4 className="text-white font-bold mb-2 flex items-center gap-2"><Workflow size={16} className="text-purple-400"/> CI/CD & Pipelines</h4>
+                              <p className="text-sm text-gray-400 leading-relaxed">
+                                Deploying web, batch, API, and scheduler apps to testing environments via <strong>Azure DevOps</strong>. monitoring ETL pipelines and data loads to ensure data integrity and timely processing.
+                              </p>
+                           </div>
+                           <div>
+                              <h4 className="text-white font-bold mb-2 flex items-center gap-2"><Shield size={16} className="text-emerald-400"/> Governance & Recovery</h4>
+                              <p className="text-sm text-gray-400 leading-relaxed">
+                                Configuring integrations and middleware for seamless handoffs. Logging daily issues and tracking fixes. Implemented Cross-VPC backup & restore for RDS PostgreSQL to guarantee disaster recovery compliance.
+                              </p>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
               </div>
             </div>
 
             {/* Internship */}
             <div className="group relative pl-8 lg:pl-0">
               <div className="flex flex-col lg:flex-row items-start justify-between gap-8 lg:gap-16">
-                 <div className="lg:w-[45%] lg:text-right lg:pr-8 lg:pt-2">
-                    <h3 className="text-xl font-bold text-gray-400 font-grotesk">Intern</h3>
-                    <p className="text-gray-500 font-medium text-lg mb-1">Globmind Technologies</p>
-                 </div>
-                 <div className="absolute left-0 lg:left-[50%] lg:-ml-[9px] top-3 w-[18px] h-[18px] rounded-full bg-[#050505] border-4 border-gray-700 z-10"></div>
-                 <div className="lg:w-[45%] lg:pl-8">
-                    <div className="glass-card p-6 rounded-2xl border-dashed border-white/10 bg-transparent">
-                       <p className="text-gray-500 font-inter text-sm leading-relaxed">
-                          Immersed in the full software development lifecycle. Gained foundational experience in technical leadership, team coordination, and project execution. Actively participated in volunteering initiatives, honing communication and collaborative skills.
-                       </p>
-                    </div>
-                 </div>
+                  <div className="lg:w-[45%] lg:text-right lg:pr-8 lg:pt-2">
+                     <h3 className="text-xl font-bold text-gray-400 font-grotesk">Intern</h3>
+                     <p className="text-gray-500 font-medium text-lg mb-1">Globmind Technologies</p>
+                  </div>
+                  <div className="absolute left-0 lg:left-[50%] lg:-ml-[9px] top-3 w-[18px] h-[18px] rounded-full bg-[#050505] border-4 border-gray-700 z-10"></div>
+                  <div className="lg:w-[45%] lg:pl-8">
+                     <div className="glass-card p-6 rounded-2xl border-dashed border-white/10 bg-transparent">
+                        <p className="text-gray-500 font-inter text-sm leading-relaxed">
+                           Immersed in the full software development lifecycle. Gained foundational experience in technical leadership, team coordination, and project execution. Actively participated in volunteering initiatives, honing communication and collaborative skills.
+                        </p>
+                     </div>
+                  </div>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* 3. Engineered Automations (Detailed) */}
+      {/* 3. Engineered Automations */}
       <section id="automations" className="py-20 relative bg-white/[0.01]">
         <div className="max-w-7xl mx-auto px-6">
            <div className="mb-16 flex items-end justify-between border-b border-white/10 pb-6">
@@ -548,7 +505,7 @@ const AestheticPortfolio = () => {
         </div>
       </section>
 
-      {/* 4. Technical Arsenal (Moved Up) */}
+      {/* 4. Technical Arsenal */}
       <section id="skills" className="py-24">
         <div className="max-w-7xl mx-auto px-6">
           <div className="mb-16 flex items-end justify-between border-b border-white/10 pb-6">
@@ -632,7 +589,7 @@ const AestheticPortfolio = () => {
         </div>
       </section>
 
-      {/* 5. Engineering Projects (Renamed) */}
+      {/* 5. Engineering Projects */}
       <section id="projects" className="py-24 bg-white/[0.01]">
         <div className="max-w-7xl mx-auto px-6">
            <div className="mb-16 flex items-end justify-between border-b border-white/10 pb-6">
@@ -706,48 +663,48 @@ const AestheticPortfolio = () => {
         </div>
       </section>
 
-      {/* 7. Strategic Pillars Section (Bottom) */}
+      {/* 7. Strategic Pillars Section */}
       <section id="pillars" className="py-20 relative">
         <div className="max-w-7xl mx-auto px-6">
            <h2 className="text-2xl font-grotesk font-bold text-white mb-10 text-center">Core Architectural Pillars</h2>
            <div className="grid md:grid-cols-3 gap-6">
-              {/* Pillar 1 */}
-              <div className="glass-card p-10 rounded-2xl group relative overflow-hidden">
-                 <div className="w-14 h-14 rounded-2xl bg-white/5 flex items-center justify-center mb-6 group-hover:bg-white/10 transition-colors border border-white/5">
-                    <Cloud className="text-white" size={28} />
-                 </div>
-                 <h3 className="text-2xl font-bold text-white font-grotesk mb-4">Cloud Architecture</h3>
-                 <p className="text-sm text-gray-400 leading-relaxed font-inter">
-                    Designing fault-tolerant, scalable AWS environments using VPCs, ELBs, and Autoscaling groups to ensure 99.99% uptime.
-                 </p>
-              </div>
+             {/* Pillar 1 */}
+             <div className="glass-card p-10 rounded-2xl group relative overflow-hidden">
+                <div className="w-14 h-14 rounded-2xl bg-white/5 flex items-center justify-center mb-6 group-hover:bg-white/10 transition-colors border border-white/5">
+                   <Cloud className="text-white" size={28} />
+                </div>
+                <h3 className="text-2xl font-bold text-white font-grotesk mb-4">Cloud Architecture</h3>
+                <p className="text-sm text-gray-400 leading-relaxed font-inter">
+                  Designing fault-tolerant, scalable AWS environments using VPCs, ELBs, and Autoscaling groups to ensure 99.99% uptime.
+                </p>
+             </div>
 
-              {/* Pillar 2 */}
-              <div className="glass-card p-10 rounded-2xl group relative overflow-hidden">
-                 <div className="w-14 h-14 rounded-2xl bg-white/5 flex items-center justify-center mb-6 group-hover:bg-white/10 transition-colors border border-white/5">
-                    <Workflow className="text-white" size={28} />
-                 </div>
-                 <h3 className="text-2xl font-bold text-white font-grotesk mb-4">AI-Enhanced Automation</h3>
-                 <p className="text-sm text-gray-400 leading-relaxed font-inter">
-                    Leveraging AI to optimize scripts and eliminating manual toil through robust IaC (Terraform), streamlining deployments.
-                 </p>
-              </div>
+             {/* Pillar 2 */}
+             <div className="glass-card p-10 rounded-2xl group relative overflow-hidden">
+                <div className="w-14 h-14 rounded-2xl bg-white/5 flex items-center justify-center mb-6 group-hover:bg-white/10 transition-colors border border-white/5">
+                   <Workflow className="text-white" size={28} />
+                </div>
+                <h3 className="text-2xl font-bold text-white font-grotesk mb-4">AI-Enhanced Automation</h3>
+                <p className="text-sm text-gray-400 leading-relaxed font-inter">
+                  Leveraging AI to optimize scripts and eliminating manual toil through robust IaC (Terraform), streamlining deployments.
+                </p>
+             </div>
 
-              {/* Pillar 3 */}
-              <div className="glass-card p-10 rounded-2xl group relative overflow-hidden">
-                 <div className="w-14 h-14 rounded-2xl bg-white/5 flex items-center justify-center mb-6 group-hover:bg-white/10 transition-colors border border-white/5">
-                    <Shield className="text-white" size={28} />
-                 </div>
-                 <h3 className="text-2xl font-bold text-white font-grotesk mb-4">Security & Governance</h3>
-                 <p className="text-sm text-gray-400 leading-relaxed font-inter">
-                    Implementing rigorous security protocols including automated OS patching, IAM role management, and WAF policies.
-                 </p>
-              </div>
+             {/* Pillar 3 */}
+             <div className="glass-card p-10 rounded-2xl group relative overflow-hidden">
+                <div className="w-14 h-14 rounded-2xl bg-white/5 flex items-center justify-center mb-6 group-hover:bg-white/10 transition-colors border border-white/5">
+                   <Shield className="text-white" size={28} />
+                </div>
+                <h3 className="text-2xl font-bold text-white font-grotesk mb-4">Security & Governance</h3>
+                <p className="text-sm text-gray-400 leading-relaxed font-inter">
+                  Implementing rigorous security protocols including automated OS patching, IAM role management, and WAF policies.
+                </p>
+             </div>
            </div>
         </div>
       </section>
 
-      {/* 6. Education & Certifications (Detailed) */}
+      {/* 6. Education & Certifications */}
       <section id="education" className="py-24 bg-white/[0.01]">
         <div className="max-w-6xl mx-auto px-6">
           <div className="mb-12 flex items-end justify-between border-b border-white/10 pb-6">
@@ -773,7 +730,7 @@ const AestheticPortfolio = () => {
                       <p className="text-white/70 font-medium">Computer Science</p>
                       <p className="text-gray-500 text-sm mb-3">SPPU Pune University</p>
                       <p className="text-xs text-gray-400 leading-relaxed">
-                         specialized in Systems Architecture, Database Management, and Object-Oriented Programming.
+                          specialized in Systems Architecture, Database Management, and Object-Oriented Programming.
                       </p>
                    </div>
 
@@ -785,7 +742,7 @@ const AestheticPortfolio = () => {
                       <p className="text-white/70 font-medium">Electrical Engineering</p>
                       <p className="text-gray-500 text-sm mb-3">MSBTE Jalgoan</p>
                       <p className="text-xs text-gray-400 leading-relaxed">
-                         Focused on circuit logic and hardware-software integration systems.
+                          Focused on circuit logic and hardware-software integration systems.
                       </p>
                    </div>
                 </div>
@@ -814,57 +771,6 @@ const AestheticPortfolio = () => {
                    </div>
                 </div>
              </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Contact / Pitch Section */}
-      <section id="contact" className="py-24">
-        <div className="max-w-4xl mx-auto px-6">
-          <div className="glass-card rounded-3xl p-8 md:p-12 border border-white/10 relative overflow-hidden">
-             <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl -mr-20 -mt-20 pointer-events-none"></div>
-
-             <div className="flex items-center gap-2 mb-6 relative z-10">
-               <Sparkles className="text-white" />
-               <h2 className="text-2xl font-grotesk font-bold text-white">AI Recruiter Tools</h2>
-             </div>
-             
-             <p className="text-gray-400 mb-8 text-sm relative z-10 max-w-xl">
-               Generate a custom pitch explaining why I am the perfect fit for your team, powered by AI.
-             </p>
-
-             <div className="grid md:grid-cols-3 gap-4 relative z-10">
-               <input 
-                  type="text" 
-                  placeholder="Company Name" 
-                  className="bg-[#050505]/50 border border-white/10 rounded-xl px-5 py-4 text-sm text-white focus:outline-none focus:border-white/30 focus:bg-[#050505]/80 transition-all"
-                  value={pitchCompany}
-                  onChange={(e) => setPitchCompany(e.target.value)}
-               />
-               <input 
-                  type="text" 
-                  placeholder="Role Title" 
-                  className="bg-[#050505]/50 border border-white/10 rounded-xl px-5 py-4 text-sm text-white focus:outline-none focus:border-white/30 focus:bg-[#050505]/80 transition-all"
-                  value={pitchRole}
-                  onChange={(e) => setPitchRole(e.target.value)}
-               />
-               <button 
-                  onClick={handleGeneratePitch}
-                  disabled={isPitchLoading}
-                  className="bg-white text-black font-bold rounded-xl px-6 py-4 text-sm hover:bg-gray-200 transition-colors disabled:opacity-50 flex justify-center items-center gap-2 shadow-lg shadow-white/10"
-               >
-                  {isPitchLoading ? <Loader className="animate-spin" size={16} /> : 'Generate Pitch'}
-               </button>
-             </div>
-
-             {generatedPitch && (
-               <div className="mt-8 p-6 bg-white/5 rounded-2xl border border-white/10 text-gray-300 leading-relaxed animate-in fade-in slide-in-from-bottom-2 relative z-10 backdrop-blur-md">
-                 <div className="flex gap-2 mb-3 text-white font-bold text-sm items-center">
-                   <Bot size={16} /> Generated Pitch:
-                 </div>
-                 <p className="font-inter italic text-lg">"{generatedPitch}"</p>
-               </div>
-             )}
           </div>
         </div>
       </section>

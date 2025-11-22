@@ -485,7 +485,7 @@ const AestheticPortfolio = () => {
                    </div>
                 </div>
 
-                {/* DYNAMIC MESSAGE POPUP - Horizontal, Transparent Apple Glass, Left Aligned */}
+                {/* DYNAMIC MESSAGE POPUP - Pointing to Image */}
                 <div 
                   className={`absolute bottom-16 -left-8 md:-left-80 w-[22rem] md:w-[28rem] p-5 rounded-2xl border border-white/10 shadow-2xl backdrop-blur-2xl bg-white/5 transition-all duration-700 transform animate-float z-20 ${isMessageVisible ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-4 scale-95'}`}
                 >
@@ -499,14 +499,14 @@ const AestheticPortfolio = () => {
                         <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
                         Latest Deployment
                       </p>
-                      <div className="text-xs text-gray-100 leading-relaxed font-inter min-h-[40px]">
+                      <div className="text-xs text-gray-100 leading-relaxed font-inter min-h-[60px]">
                         <TypewriterText text={HERO_MESSAGES[currentMessageIndex]} isActive={isMessageVisible} />
                       </div>
                     </div>
                   </div>
                   
-                  {/* Triangle Pointer pointing RIGHT (towards image) */}
-                  <div className="absolute -right-3 bottom-8 w-0 h-0 border-t-[10px] border-t-transparent border-l-[15px] border-l-white/5 border-b-[10px] border-b-transparent transform rotate-0 backdrop-blur-2xl"></div>
+                  {/* Pointer - Rotated Square (Cleanest Glassmorphism Method) */}
+                  <div className="absolute top-1/2 -right-2 w-4 h-4 bg-white/5 border-t border-r border-white/10 transform -translate-y-1/2 rotate-45 backdrop-blur-2xl"></div>
                 </div>
 
              </div>

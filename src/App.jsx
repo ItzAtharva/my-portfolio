@@ -466,7 +466,7 @@ const AestheticPortfolio = () => {
              <div className="relative w-72 h-72 md:w-[420px] md:h-[420px] transition-transform duration-500 hover:scale-105">
                 <div className="absolute inset-0 bg-gradient-to-tr from-emerald-500/20 to-transparent rounded-full blur-3xl group-hover:blur-2xl transition-all duration-700"></div>
                 <img 
-                    src="image_e34c1a.jpg" 
+                    src="shared image.jpg" 
                     alt="Atharva Jagtap" 
                     className="relative w-full h-full object-cover rounded-2xl shadow-2xl ring-1 ring-white/10 grayscale hover:grayscale-0 transition-all duration-700 ease-out"
                     onError={(e) => { 

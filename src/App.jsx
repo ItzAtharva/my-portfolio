@@ -62,7 +62,7 @@ const TypewriterText = ({ text, isActive }) => {
       } else {
         clearInterval(timer);
       }
-    }, 20); // Slightly faster typing for longer text
+    }, 20); // Typing speed
 
     return () => clearInterval(timer);
   }, [text, isActive]);
@@ -105,7 +105,7 @@ const TiltCard = ({ children, className = "" }) => {
         className="w-full h-full relative transform-gpu"
         style={{
           transform: `rotateX(${rotate.x}deg) rotateY(${rotate.y}deg)`,
-          transition: isHovered ? 'none' : 'transform 0.5s ease-out' // Critical Fix: No transition on hover for instant tracking
+          transition: isHovered ? 'none' : 'transform 0.5s ease-out' 
         }}
       >
         {/* Dynamic Glare */}
@@ -140,7 +140,7 @@ const AestheticPortfolio = () => {
   const bgBlueRef = useRef(null);
   const bgEmeraldRef = useRef(null);
 
-  // Message Cycling Logic (12 Seconds for longer text)
+  // Message Cycling Logic (12 Seconds)
   useEffect(() => {
     const interval = setInterval(() => {
       setIsMessageVisible(false); // Start fade out
@@ -485,13 +485,13 @@ const AestheticPortfolio = () => {
                    </div>
                 </div>
 
-                {/* DYNAMIC MESSAGE POPUP - Apple Glass Style & Repositioned */}
+                {/* DYNAMIC MESSAGE POPUP - Horizontal, Transparent Apple Glass, Left Aligned */}
                 <div 
-                  className={`absolute bottom-24 -left-10 md:-left-64 w-72 md:w-96 p-6 rounded-2xl border border-white/10 shadow-2xl backdrop-blur-2xl bg-white/5 transition-all duration-700 transform animate-float z-20 ${isMessageVisible ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-4 scale-95'}`}
+                  className={`absolute bottom-16 -left-8 md:-left-80 w-[22rem] md:w-[28rem] p-5 rounded-2xl border border-white/10 shadow-2xl backdrop-blur-2xl bg-white/5 transition-all duration-700 transform animate-float z-20 ${isMessageVisible ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-4 scale-95'}`}
                 >
                   {/* Content */}
                   <div className="flex gap-4 items-start">
-                    <div className="w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center shrink-0 border border-emerald-500/30 backdrop-blur-md">
+                    <div className="w-10 h-10 rounded-full bg-emerald-500/10 flex items-center justify-center shrink-0 border border-emerald-500/20 backdrop-blur-md">
                       <MessageSquare size={18} className="text-emerald-400" />
                     </div>
                     <div className="flex-1">
@@ -499,14 +499,14 @@ const AestheticPortfolio = () => {
                         <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
                         Latest Deployment
                       </p>
-                      <div className="text-sm text-gray-100 leading-relaxed font-inter min-h-[80px]">
+                      <div className="text-xs text-gray-100 leading-relaxed font-inter min-h-[40px]">
                         <TypewriterText text={HERO_MESSAGES[currentMessageIndex]} isActive={isMessageVisible} />
                       </div>
                     </div>
                   </div>
                   
-                  {/* Triangle Pointer pointing to image */}
-                  <div className="absolute -right-3 bottom-8 w-0 h-0 border-t-[10px] border-t-transparent border-l-[15px] border-l-white/10 border-b-[10px] border-b-transparent transform rotate-0 backdrop-blur-2xl"></div>
+                  {/* Triangle Pointer pointing RIGHT (towards image) */}
+                  <div className="absolute -right-3 bottom-8 w-0 h-0 border-t-[10px] border-t-transparent border-l-[15px] border-l-white/5 border-b-[10px] border-b-transparent transform rotate-0 backdrop-blur-2xl"></div>
                 </div>
 
              </div>

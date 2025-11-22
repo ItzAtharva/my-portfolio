@@ -34,8 +34,41 @@ import {
   FileJson,
   Globe,
   BookOpen,
-  GraduationCap
+  GraduationCap,
+  MessageSquare
 } from 'lucide-react';
+
+// --- CONFIGURATION: ADD YOUR MESSAGES HERE ---
+const HERO_MESSAGES = [
+  "Boosted overall efficiency by 90% and cut manual retrieval time by 80% by engineering a custom AWS S3 automation tool that enables users to query and download historical file versions via a UI.",
+  "Architected a real-time notification mesh using Amazon SES and SNS, reducing Mean Time to Detect (MTTD) for critical pipeline failures."
+];
+
+// --- TYPEWRITER EFFECT COMPONENT ---
+const TypewriterText = ({ text, isActive }) => {
+  const [displayedText, setDisplayedText] = useState('');
+  
+  useEffect(() => {
+    if (!isActive) {
+      setDisplayedText('');
+      return;
+    }
+    
+    let index = 0;
+    const timer = setInterval(() => {
+      if (index < text.length) {
+        setDisplayedText((prev) => prev + text.charAt(index));
+        index++;
+      } else {
+        clearInterval(timer);
+      }
+    }, 20); // Slightly faster typing for longer text
+
+    return () => clearInterval(timer);
+  }, [text, isActive]);
+
+  return <span>{displayedText}</span>;
+};
 
 // --- FIXED & ENHANCED 3D TILT CARD ---
 const TiltCard = ({ children, className = "" }) => {
@@ -94,6 +127,10 @@ const AestheticPortfolio = () => {
   const [activeSection, setActiveSection] = useState('home');
   const [scrolled, setScrolled] = useState(false);
   
+  // --- MESSAGE POPUP STATE ---
+  const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
+  const [isMessageVisible, setIsMessageVisible] = useState(true);
+
   // --- ADVANCED CURSOR & PARALLAX STATE ---
   const cursorDotRef = useRef(null);
   const cursorRingRef = useRef(null);
@@ -102,6 +139,19 @@ const AestheticPortfolio = () => {
   // Refs for parallax background elements
   const bgBlueRef = useRef(null);
   const bgEmeraldRef = useRef(null);
+
+  // Message Cycling Logic (12 Seconds for longer text)
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIsMessageVisible(false); // Start fade out
+      setTimeout(() => {
+        setCurrentMessageIndex((prev) => (prev + 1) % HERO_MESSAGES.length);
+        setIsMessageVisible(true); // Start fade in + typing
+      }, 500); 
+    }, 12000); // 12 Seconds
+
+    return () => clearInterval(interval);
+  }, []);
 
   // Mouse position logic
   useEffect(() => {
@@ -284,6 +334,16 @@ const AestheticPortfolio = () => {
           opacity: 1;
           transform: translateY(0);
         }
+
+        /* Bubble Animation */
+        @keyframes float {
+          0% { transform: translateY(0px); }
+          50% { transform: translateY(-10px); }
+          100% { transform: translateY(0px); }
+        }
+        .animate-float {
+          animation: float 6s ease-in-out infinite;
+        }
       `}</style>
 
       {/* --- CUSTOM CURSOR ELEMENTS --- */}
@@ -401,19 +461,20 @@ const AestheticPortfolio = () => {
             </div>
           </div>
 
-          {/* Image Profile with Parallax Effect */}
+          {/* Image Profile with Chat Popup */}
           <div className="relative group reveal-on-scroll">
              <div className="relative w-72 h-72 md:w-[420px] md:h-[420px] transition-transform duration-500 hover:scale-105">
                 <div className="absolute inset-0 bg-gradient-to-tr from-emerald-500/20 to-transparent rounded-full blur-3xl group-hover:blur-2xl transition-all duration-700"></div>
                 <img 
-                    src="shared image.jpg" 
+                    src="image_e34c1a.jpg" 
                     alt="Atharva Jagtap" 
                     className="relative w-full h-full object-cover rounded-2xl shadow-2xl ring-1 ring-white/10 grayscale hover:grayscale-0 transition-all duration-700 ease-out"
                     onError={(e) => { 
                       e.target.src = "https://via.placeholder.com/400x400/1a1a1a/ffffff?text=AJ"; 
                     }}
                 />
-                {/* Glass Badge over Image */}
+                
+                {/* Glass Badge over Image (Bottom Right) */}
                 <div className="absolute -bottom-6 -right-6 glass-card p-4 rounded-xl flex items-center gap-3 animate-bounce delay-1000 duration-3000 hover:animate-none">
                    <div className="p-2 bg-emerald-500/20 rounded-lg">
                       <BrainCircuit className="text-emerald-400" size={20} />
@@ -423,6 +484,31 @@ const AestheticPortfolio = () => {
                       <p className="text-sm font-bold text-white">Online & Learning</p>
                    </div>
                 </div>
+
+                {/* DYNAMIC MESSAGE POPUP - Apple Glass Style & Repositioned */}
+                <div 
+                  className={`absolute bottom-24 -left-10 md:-left-64 w-72 md:w-96 p-6 rounded-2xl border border-white/10 shadow-2xl backdrop-blur-2xl bg-white/5 transition-all duration-700 transform animate-float z-20 ${isMessageVisible ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-4 scale-95'}`}
+                >
+                  {/* Content */}
+                  <div className="flex gap-4 items-start">
+                    <div className="w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center shrink-0 border border-emerald-500/30 backdrop-blur-md">
+                      <MessageSquare size={18} className="text-emerald-400" />
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-xs text-emerald-400 font-bold mb-1 tracking-wider uppercase flex items-center gap-2">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                        Latest Deployment
+                      </p>
+                      <div className="text-sm text-gray-100 leading-relaxed font-inter min-h-[80px]">
+                        <TypewriterText text={HERO_MESSAGES[currentMessageIndex]} isActive={isMessageVisible} />
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Triangle Pointer pointing to image */}
+                  <div className="absolute -right-3 bottom-8 w-0 h-0 border-t-[10px] border-t-transparent border-l-[15px] border-l-white/10 border-b-[10px] border-b-transparent transform rotate-0 backdrop-blur-2xl"></div>
+                </div>
+
              </div>
           </div>
         </div>
